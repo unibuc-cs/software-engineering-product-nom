@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Movie list"; // asta se inlocuieste in _Layout.cshtml <title>@ViewData["Title"] - Chir.ia_project</title>
+}
+
+<h2>My movie list</h2>
+
+
+<ul>
+    @for (int i = 0; i < (int)ViewData["NumTimes"]!; i++)
+    {
+        <li>@ViewData["Message"]</li>
+    }
+</ul>
