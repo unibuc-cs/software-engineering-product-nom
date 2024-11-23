@@ -3,6 +3,7 @@ using Chir.ia_project.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Chir.ia_project.Services;
+using Chir.ia_project.Models.Repository;
 
 namespace Chir.ia_project
 {
@@ -22,7 +23,7 @@ namespace Chir.ia_project
 
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            services.AddScoped<IMoviesService, MoviesService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }
