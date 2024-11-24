@@ -1,9 +1,9 @@
-﻿using Chir.ia_project.Models.Entities;
-using Chir.ia_project.Models;
+﻿using Chir.ia_project.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Chir.ia_project.Services;
 using Chir.ia_project.Models.Repository;
+using Chir.ia_project.Models.Entities;
 
 namespace Chir.ia_project
 {

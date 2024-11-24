@@ -1,6 +1,5 @@
 using Chir.ia_project;
 using Chir.ia_project.Models;
-using Chir.ia_project.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

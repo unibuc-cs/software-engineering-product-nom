@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Chir.ia_project.Controllers
+namespace Chir.ia_project.Models.Controllers
 {
     public class HelloWorldController : Controller
     {

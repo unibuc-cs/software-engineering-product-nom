@@ -11,6 +11,7 @@ namespace Chir.ia_project.Models
 
         public DbSet<AppUser> Users { get; set; }
         public DbSet<AppRole> Roles { get; set; }
+        public DbSet<Movie> Movies { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
         {

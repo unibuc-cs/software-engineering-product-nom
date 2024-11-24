@@ -11,8 +11,8 @@ namespace Chir.ia_project.Models.Repository
         void Delete(TEntity record, bool removeFromDb = false);
         void DeleteRange(IEnumerable<TEntity> records, bool removeFromDb = false);
         Task<TEntity> GetByIdAsync(Guid id, bool includeDeleted = false);
-        Task<IEnumerable<TEntity>> GetAllByIdsAsync(IEnumerable<Guid> ids, bool includeDeleted = false);
-        Task<IEnumerable<TEntity>> GetAllAsync(bool includeDeleted = false);
+        Task<List<TEntity>> GetAllByIdsAsync(IEnumerable<Guid> ids, bool includeDeleted = false);
+        Task<List<TEntity>> GetAllAsync(bool includeDeleted = false);
         Task<bool> ExistsAsync(Guid id);
 
         void Update(TEntity record);
@@ -76,12 +76,12 @@ namespace Chir.ia_project.Models.Repository
             return await Get(includeDeleted).FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllByIdsAsync(IEnumerable<Guid> ids, bool includeDeleted = false)
+        public async Task<List<TEntity>> GetAllByIdsAsync(IEnumerable<Guid> ids, bool includeDeleted = false)
         {
             return await Get(includeDeleted).Where(e => ids.Contains(e.Id)).ToListAsync();
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync(bool includeDeleted = false)
+        public async Task<List<TEntity>> GetAllAsync(bool includeDeleted = false)
         {
             return await Get(includeDeleted).ToListAsync();
         }

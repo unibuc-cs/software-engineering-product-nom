@@ -3,6 +3,10 @@
     public interface IUnitOfWork
     {
         Context Context { get; }
+
+        IMovieRepository Movie { get; }
+
+
         Task<bool> SaveChangesAsync();
     }
 
@@ -12,9 +16,12 @@
 
         public Context Context => _context;
 
-        public UnitOfWork(Context context)
+        public IMovieRepository Movie { get; }
+
+        public UnitOfWork(Context context, IMovieRepository movieRepository)
         {
             _context = context;
+            Movie = movieRepository;
         }
 
         public async Task<bool> SaveChangesAsync()
