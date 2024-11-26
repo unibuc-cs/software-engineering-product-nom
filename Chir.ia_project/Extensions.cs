@@ -23,10 +23,13 @@ namespace Chir.ia_project
 
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IMovieService, MovieService>();
 
             return services;
         }
 
+        public static IServiceCollection AddRepositories(this IServiceCollection services) => services
+            .AddScoped<IUnitOfWork, UnitOfWork>()
+            .AddScoped<IMovieRepository, MovieRepository>();
     }
 }

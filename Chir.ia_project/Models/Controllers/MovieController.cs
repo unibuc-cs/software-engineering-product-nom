@@ -1,4 +1,5 @@
-﻿using Chir.ia_project.Models.Repository;
+﻿using System.Text;
+using Chir.ia_project.Models.Repository;
 using Chir.ia_project.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,16 +14,33 @@ namespace Chir.ia_project.Models.Controllers
             moviesService = _movieService;
         }
 
+        [HttpGet]
         public async Task<string> Index()
         {
-            var allMovies = moviesService.GetAllMovies();
-            return "added";
+            var returnVal = await moviesService.GetAllMoviesFormatString();
+
+            return returnVal;
         }
 
-
-        public void AddMovie(string description, int rating)
+        [HttpGet]
+        public async Task AddMovie(string description, int rating)
         {
-        
+           await moviesService.InsertMovie(description, rating);
         }
+
+        [HttpGet]
+        public async Task DeleteMovie(Guid Id)
+        {
+            await moviesService.DeleteMovie(Id);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetById(Guid Id)
+        {
+            var response = await moviesService.GetById(Id);
+
+            return View(response);
+        }
+
     }
 }

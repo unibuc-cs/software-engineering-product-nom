@@ -8,8 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContextAndIdentity(builder.Configuration, builder.Environment);
-
+builder.Services.AddDbContextAndIdentity(builder.Configuration, builder.Environment)
+    .AddServices()
+    .AddRepositories();
 
 var app = builder.Build();
 
