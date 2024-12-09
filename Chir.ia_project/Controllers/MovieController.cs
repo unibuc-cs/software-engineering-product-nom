@@ -3,7 +3,7 @@ using Chir.ia_project.Models.Repository;
 using Chir.ia_project.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Chir.ia_project.Models.Controllers
+namespace Chir.ia_project.Controllers
 {
     public class MovieController : Controller
     {
@@ -25,7 +25,7 @@ namespace Chir.ia_project.Models.Controllers
         [HttpGet]
         public async Task AddMovie(string description, int rating)
         {
-           await moviesService.InsertMovie(description, rating);
+            await moviesService.InsertMovie(description, rating);
         }
 
         [HttpGet]

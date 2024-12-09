@@ -2,7 +2,7 @@ using System.Diagnostics;
 using Chir.ia_project.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Chir.ia_project.Models.Controllers
+namespace Chir.ia_project.Controllers
 {
     public class HomeController : Controller
     {
