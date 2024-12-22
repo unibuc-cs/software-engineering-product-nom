@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Chir.ia_project.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chir.ia_project.Models.Repository
 {

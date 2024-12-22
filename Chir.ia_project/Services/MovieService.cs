@@ -1,8 +1,8 @@
-﻿using Chir.ia_project.Models;
-using Chir.ia_project.Models.Repository;
+﻿using Chir.ia_project.Models.Repository;
 using Chir.ia_project.Services.Common;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
+using Chir.ia_project.Models.Entities;
 
 namespace Chir.ia_project.Services
 {

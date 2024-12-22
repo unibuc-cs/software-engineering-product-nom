@@ -1,6 +1,4 @@
-﻿using Chir.ia_project.Models.Entities;
-
-namespace Chir.ia_project.Models
+﻿namespace Chir.ia_project.Models.Entities
 {
     public class Movie : BaseEntity
     {

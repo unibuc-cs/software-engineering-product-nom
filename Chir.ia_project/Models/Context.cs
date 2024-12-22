@@ -12,6 +12,21 @@ namespace Chir.ia_project.Models
         public DbSet<AppUser> Users { get; set; }
         public DbSet<AppRole> Roles { get; set; }
         public DbSet<Movie> Movies { get; set; }
+        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<Listing> Listings { get; set; }
+        public DbSet<ListingEngagement> ListingEngagements { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<UserConversation> UserConversations { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            foreach (var foreignKey in modelBuilder.Model.GetEntityTypes()
+                         .SelectMany(entity => entity.GetForeignKeys()))
+            {
+                foreignKey.DeleteBehavior = DeleteBehavior.NoAction;
+            }
+            base.OnModelCreating(modelBuilder);
+        }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
         {
