@@ -21,7 +21,6 @@ namespace Chir.ia_project.Services
 
         public async Task<string> GetAllMoviesFormatString()
         {
-
             var builder = new StringBuilder();
 
             var allMovies = await UnitOfWork.Movie.GetAllAsync();

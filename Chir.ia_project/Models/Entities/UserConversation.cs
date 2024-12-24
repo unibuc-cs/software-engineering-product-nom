@@ -5,7 +5,7 @@
         public Guid ConversationId { get; set; }
         public Conversation Conversation { get; set; }
 
-        public Guid AppUserId { get; set; }
-        public AppUser AppUser { get; set; }
+        public Guid UserId { get; set; }
+        public User User { get; set; }
     }
 }

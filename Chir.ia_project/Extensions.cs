@@ -30,6 +30,8 @@ namespace Chir.ia_project
 
         public static IServiceCollection AddRepositories(this IServiceCollection services) => services
             .AddScoped<IUnitOfWork, UnitOfWork>()
-            .AddScoped<IMovieRepository, MovieRepository>();
+            .AddScoped<IMovieRepository, MovieRepository>()
+            .AddScoped<IUserRepository, UserRepository>()
+            .AddScoped<IConversationRepository, ConversationRepository>();
     }
 }

@@ -10,8 +10,8 @@ namespace Chir.ia_project.Models.Entities
         [MaxLength(1024)]
         public string Details { get; set; }
 
-        public Guid AppUserId { get; set; }
-        public AppUser AppUser { get; set; }
+        public Guid UserId { get; set; }
+        public User User { get; set; }
 
         public List<ListingEngagement> ListingEngagements { get; set; }
     }

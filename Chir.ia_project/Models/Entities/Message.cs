@@ -8,8 +8,8 @@ namespace Chir.ia_project.Models.Entities
         [MaxLength(2048)]
         public string Content { get; set; }
 
-        public Guid AppUserId { get; set; }
-        public AppUser AppUser { get; set; }
+        public Guid UserId { get; set; }
+        public User User { get; set; }
 
         public Guid ConversationId { get; set; }
         public Conversation Conversation { get; set; }

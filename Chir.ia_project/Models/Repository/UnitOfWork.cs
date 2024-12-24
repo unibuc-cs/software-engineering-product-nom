@@ -4,6 +4,8 @@
     {
         Context Context { get; }
         IMovieRepository Movie { get; }
+        IUserRepository User { get; }
+        IConversationRepository Conversation { get; }
         Task<bool> SaveChangesAsync();
     }
 
@@ -12,11 +14,16 @@
         private readonly Context _context;
         public Context Context => _context;
         public IMovieRepository Movie { get; }
+        public IUserRepository User { get; }
+        public IConversationRepository Conversation { get; }
 
-        public UnitOfWork(Context context, IMovieRepository movieRepository)
+        public UnitOfWork(Context context, IMovieRepository movieRepository, 
+            IUserRepository user, IConversationRepository conversation)
         {
             _context = context;
             Movie = movieRepository;
+            User = user;
+            Conversation = conversation;
         }
 
         public async Task<bool> SaveChangesAsync()
