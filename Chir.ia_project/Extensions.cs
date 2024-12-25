@@ -32,6 +32,10 @@ namespace Chir.ia_project
             .AddScoped<IUnitOfWork, UnitOfWork>()
             .AddScoped<IMovieRepository, MovieRepository>()
             .AddScoped<IUserRepository, UserRepository>()
-            .AddScoped<IConversationRepository, ConversationRepository>();
+            .AddScoped<IConversationRepository, ConversationRepository>()
+            .AddScoped<IListingRepository, ListingRepository>()
+            .AddScoped<IListingEngagementRepository, ListingEngagementRepository>()
+            .AddScoped<IMessageRepository, MessageRepository>()
+            .AddScoped<IUserConversationRepository, UserConversationRepository>();
     }
 }
