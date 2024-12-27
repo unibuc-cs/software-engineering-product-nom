@@ -6,25 +6,54 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Chir.ia_project.Migrations
 {
     /// <inheritdoc />
-    public partial class AddInitialMigration : Migration
+    public partial class InitialChiriaMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "FirstName",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
+            migrationBuilder.AlterColumn<string>(
                 name: "LastName",
-                table: "AspNetUsers");
-
-            migrationBuilder.AddColumn<Guid>(
-                name: "UserId",
                 table: "AspNetUsers",
-                type: "uniqueidentifier",
+                type: "nvarchar(32)",
+                maxLength: 32,
                 nullable: false,
-                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
+                oldClrType: typeof(string),
+                oldType: "nvarchar(max)");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "FirstName",
+                table: "AspNetUsers",
+                type: "nvarchar(32)",
+                maxLength: 32,
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(max)");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Email",
+                table: "AspNetUsers",
+                type: "nvarchar(256)",
+                maxLength: 256,
+                nullable: false,
+                defaultValue: "",
+                oldClrType: typeof(string),
+                oldType: "nvarchar(256)",
+                oldMaxLength: 256,
+                oldNullable: true);
+
+            migrationBuilder.AddColumn<DateTime>(
+                name: "CreatedAt",
+                table: "AspNetUsers",
+                type: "datetime2",
+                nullable: false,
+                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+
+            migrationBuilder.AddColumn<int>(
+                name: "UserType",
+                table: "AspNetUsers",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
 
             migrationBuilder.CreateTable(
                 name: "Conversations",
@@ -39,30 +68,6 @@ namespace Chir.ia_project.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Conversations", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    UserType = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Users_AspNetUsers_AppUserId",
-                        column: x => x.AppUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -82,9 +87,9 @@ namespace Chir.ia_project.Migrations
                 {
                     table.PrimaryKey("PK_Listings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Listings_Users_UserId",
+                        name: "FK_Listings_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 });
 
@@ -104,14 +109,14 @@ namespace Chir.ia_project.Migrations
                 {
                     table.PrimaryKey("PK_Messages", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Messages_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_Messages_Conversations_ConversationId",
                         column: x => x.ConversationId,
                         principalTable: "Conversations",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Messages_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
                         principalColumn: "Id");
                 });
 
@@ -130,14 +135,14 @@ namespace Chir.ia_project.Migrations
                 {
                     table.PrimaryKey("PK_UserConversations", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_UserConversations_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_UserConversations_Conversations_ConversationId",
                         column: x => x.ConversationId,
                         principalTable: "Conversations",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_UserConversations_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
                         principalColumn: "Id");
                 });
 
@@ -158,14 +163,14 @@ namespace Chir.ia_project.Migrations
                 {
                     table.PrimaryKey("PK_ListingEngagements", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_ListingEngagements_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_ListingEngagements_Listings_ListingId",
                         column: x => x.ListingId,
                         principalTable: "Listings",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ListingEngagements_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
                         principalColumn: "Id");
                 });
 
@@ -203,12 +208,6 @@ namespace Chir.ia_project.Migrations
                 name: "IX_UserConversations_UserId",
                 table: "UserConversations",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_AppUserId",
-                table: "Users",
-                column: "AppUserId",
-                unique: true);
         }
 
         /// <inheritdoc />
@@ -229,26 +228,41 @@ namespace Chir.ia_project.Migrations
             migrationBuilder.DropTable(
                 name: "Conversations");
 
-            migrationBuilder.DropTable(
-                name: "Users");
-
             migrationBuilder.DropColumn(
-                name: "UserId",
+                name: "CreatedAt",
                 table: "AspNetUsers");
 
-            migrationBuilder.AddColumn<string>(
-                name: "FirstName",
-                table: "AspNetUsers",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
+            migrationBuilder.DropColumn(
+                name: "UserType",
+                table: "AspNetUsers");
 
-            migrationBuilder.AddColumn<string>(
+            migrationBuilder.AlterColumn<string>(
                 name: "LastName",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
                 nullable: false,
-                defaultValue: "");
+                oldClrType: typeof(string),
+                oldType: "nvarchar(32)",
+                oldMaxLength: 32);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "FirstName",
+                table: "AspNetUsers",
+                type: "nvarchar(max)",
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(32)",
+                oldMaxLength: 32);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Email",
+                table: "AspNetUsers",
+                type: "nvarchar(256)",
+                maxLength: 256,
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(256)",
+                oldMaxLength: 256);
         }
     }
 }

@@ -12,8 +12,8 @@ namespace Chir.ia_project
         public static IServiceCollection AddDbContextAndIdentity(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
         {
             services.AddDbContext<Context>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddIdentity<AppUser, AppRole>()
+            services.AddRazorPages();
+            services.AddIdentity<User, AppRole>()
                 .AddEntityFrameworkStores<Context>()
                 .AddDefaultTokenProviders();
 

@@ -1,9 +1,10 @@
 ﻿using Chir.ia_project.Models.Enum;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace Chir.ia_project.Models.Entities
 {
-    public class User : BaseEntity
+    public class User : IdentityUser<Guid>
     {
         [MaxLength(32)]
         public string FirstName { get; set; }
@@ -19,8 +20,5 @@ namespace Chir.ia_project.Models.Entities
         public List<ListingEngagement> ListingEngagements { get; set; }
         public List<UserConversation> UserConversations { get; set; }
         public List<Message> Messages { get; set; }
-
-        public Guid AppUserId { get; set; }
-        public AppUser AppUser { get; set; }
     }
 }

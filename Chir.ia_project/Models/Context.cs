@@ -5,11 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Chir.ia_project.Models
 {
-    public class Context : IdentityDbContext<AppUser, AppRole, Guid>
+    public class Context : IdentityDbContext<User, AppRole, Guid>
     {
         public Context(DbContextOptions<Context> options) : base(options) { }
 
-        public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<AppRole> Roles { get; set; }
         public DbSet<Movie> Movies { get; set; }
@@ -21,11 +20,6 @@ namespace Chir.ia_project.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<AppUser>()
-                .HasOne(a => a.User)
-                .WithOne(u => u.AppUser)
-                .HasForeignKey<User>(u => u.AppUserId);
-
             foreach (var foreignKey in modelBuilder.Model.GetEntityTypes()
                          .SelectMany(entity => entity.GetForeignKeys()))
             {
