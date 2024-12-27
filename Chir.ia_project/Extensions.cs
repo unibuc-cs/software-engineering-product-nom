@@ -13,9 +13,10 @@ namespace Chir.ia_project
         {
             services.AddDbContext<Context>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
             services.AddRazorPages();
-            services.AddIdentity<User, AppRole>()
-                .AddEntityFrameworkStores<Context>()
-                .AddDefaultTokenProviders();
+            services.AddDefaultIdentity<User>()
+                .AddEntityFrameworkStores<Context>();
+
+            //builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<Context>();
 
             //services.AddScoped<DbSeeder>();
             return services;

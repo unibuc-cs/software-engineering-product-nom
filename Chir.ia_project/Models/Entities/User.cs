@@ -6,12 +6,6 @@ namespace Chir.ia_project.Models.Entities
 {
     public class User : IdentityUser<Guid>
     {
-        [MaxLength(32)]
-        public string FirstName { get; set; }
-        [MaxLength(32)]
-        public string LastName { get; set; }
-        [MaxLength(128)]
-        public string Email { get; set; }
         public UserType UserType { get; set; }
 
         public DateTime CreatedAt { get; set; }
