@@ -17,8 +17,8 @@
             <p class="p_area">Area: @listing.TotalLivableArea</p>
             <p class="p_details">Details: @listing.Details</p>
         </div>
-        
-        <form method="delete" action="/Listing/DeleteListing/@listing.Id">
+
+        <form method="post" action="/Listing/DeleteListing/@listing.Id">
 
             <button class="btn btn-danger" type="submit">Delete listing</button>
 

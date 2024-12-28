@@ -54,10 +54,11 @@ namespace Chir.ia_project.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpDelete]
-        public async Task DeleteListing(Guid id)
+        [HttpPost]
+        public async Task<IActionResult> DeleteListing(Guid id)
         {
             await listingService.DeleteListingAsync(id);
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
