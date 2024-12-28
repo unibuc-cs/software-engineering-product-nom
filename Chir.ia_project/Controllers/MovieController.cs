@@ -22,13 +22,13 @@ namespace Chir.ia_project.Controllers
             return returnVal;
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task AddMovie(string description, int rating)
         {
             await moviesService.InsertMovie(description, rating);
         }
 
-        [HttpGet]
+        [HttpDelete]
         public async Task DeleteMovie(Guid Id)
         {
             await moviesService.DeleteMovie(Id);
