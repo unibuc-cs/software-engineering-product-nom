@@ -24,7 +24,8 @@ namespace Chir.ia_project
 
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            services.AddScoped<IMovieService, MovieService>();
+            services.AddScoped<IMovieService, MovieService>()
+                .AddScoped<IListingService, ListingService>();
 
             return services;
         }
