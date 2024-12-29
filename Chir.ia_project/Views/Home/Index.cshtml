@@ -2,7 +2,43 @@
     ViewData["Title"] = "Home Page";
 }
 
+<style>
+    .btn-square {
+        width: 100%;
+        height: 60vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-size: cover;
+        background-position: center;
+        color: wheat;
+        font-size: 3em;
+        text-shadow: 1px 1px 2px black;
+    }
+    .btn-rent {
+        background-image: url('land_a_property.jpg');
+    }
+    .btn-look {
+        background-image: url('look_for_rent.jpeg');
+    }
+    .btn-container {
+        display: flex;
+        gap: 1rem;
+    }
+    .btn-container a {
+        flex: 1;
+    }
+</style>
+
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Welcome to Chir.ia</h1>
+    <h2 class="display-5">What would you like to do today?</h2>
+    <div class="mt-4 btn-container">
+        <a href="" class="btn btn-primary btn-lg btn-square btn-rent">
+            Rent a property
+        </a>
+        <a href="" class="btn btn-secondary btn-lg btn-square btn-look">
+            Look for rent
+        </a>
+    </div>
 </div>
