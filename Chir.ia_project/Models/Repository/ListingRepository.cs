@@ -1,4 +1,5 @@
 ﻿using Chir.ia_project.Models.Entities;
+using Chir.ia_project.Services.Dtos;
 
 namespace Chir.ia_project.Models.Repository
 {
@@ -14,6 +15,7 @@ namespace Chir.ia_project.Models.Repository
         {
             _context = context;
         }
+
     }
 
 }

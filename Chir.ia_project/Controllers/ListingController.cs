@@ -1,7 +1,6 @@
 ﻿using Chir.ia_project.Models.Entities;
 using Chir.ia_project.Models.Enum;
 using Chir.ia_project.Services;
-using Chir.ia_project.Services.Dtos;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -68,6 +67,12 @@ namespace Chir.ia_project.Controllers
             return View(response);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> IndexSwipe()
+        { 
+            var returnVal = await listingService.GetAllListingsFormatStringAsync();
+            return View(returnVal);
+        }
 
     }
 }

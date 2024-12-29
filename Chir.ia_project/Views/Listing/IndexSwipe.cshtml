@@ -1,0 +1,138 @@
+﻿@model Chir.ia_project.Services.Dtos.ListingResponse
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
+<style>
+
+    .card-container {
+    position: relative;
+    display: flex; /* Folosim flexbox pentru a alinia cardurile */
+    justify-content: center; /* Centrare orizontală */
+    align-items: center; /* Centrare verticală */
+    width: 100vw; /* Lățimea containerului pe toată lățimea ecranului */
+    height: 100vh; /* Înălțimea containerului pe toată înălțimea ecranului */
+    overflow: hidden; /* Evită scroll-ul în cazul în care cardurile depășesc dimensiunile */
+    }
+
+    .card-container .card:first-child {
+        z-index: 20; /* Cardul activ trebuie să fie în față */
+    }
+
+    .card {
+        width: 80%; /* Setăm cardul la 80% din lățimea containerului pentru a-l face mai responsive */
+        max-width: 300px; /* Maxim 300px pentru a păstra dimensiunile inițiale pe ecrane mari */
+        height: 400px;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        position: absolute;
+        background: white;
+        cursor: grab;
+        z-index: 10;
+        transition: transform 0.3s, opacity 0.3s;
+    }
+
+    .card img {
+        width: 100%;
+        height: 70%;
+        object-fit: cover;
+    }
+
+    .card .info {
+        padding: 10px;
+        text-align: center;
+    }
+
+</style>
+
+<div class="card-container" id="cardContainer">
+    @foreach (var listing in Model.ListingsList)
+    {
+        <div class="card" data-id="@listing.Id">
+            @*<img src="@item.ImageUrl" alt="@item.Title" />*@
+            <div class="info">
+                <p>@listing.SeismicRisk</p>
+                <p>@listing.TotalLivableArea</p>
+                <p>@listing.Details</p>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+
+    const cards = document.querySelectorAll('.card');
+    let currentIndex = 0; // Indexul cardului curent
+    let startX = 0; // Poziția inițială
+    let currentX = 0; // Poziția curentă
+    let isDragging = false;
+
+    // Inițializează cardul curent
+    function setupCard(card) {
+        let offsetX = 0; // Reține poziția cardului
+
+        // Eveniment: Mouse Down
+        card.addEventListener('mousedown', (e) => {
+            startX = e.clientX; // Salvează poziția de start
+            isDragging = true;
+            card.style.cursor = 'grabbing';
+
+            // Eveniment: Mouse Move
+            const onMouseMove = (e) => {
+                if (!isDragging) return;
+                const diffX = e.clientX - startX; // Calculează deplasarea
+                offsetX = diffX;
+                card.style.transform = `translateX(${diffX}px)`; // Mișcă cardul
+            };
+
+            // Eveniment: Mouse Up
+            const onMouseUp = () => {
+                isDragging = false;
+                card.style.cursor = 'grab';
+
+                // Detectează swipe-ul
+                if (offsetX > 100) { // Swipe dreapta
+                    removeCard(card, true);
+                } else if (offsetX < -100) { // Swipe stânga
+                    removeCard(card, false);
+                } else {
+                    // Revine la poziția inițială
+                    card.style.transition = 'transform 0.3s';
+                    card.style.transform = 'translateX(0px)';
+                    setTimeout(() => {
+                        card.style.transition = '';
+                    }, 300);
+                }
+
+                // Elimină evenimentele pentru mouse
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            };
+
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        });
+    }
+
+    // Elimină cardul curent și activează următorul
+    function removeCard(card, isRight) {
+        card.style.transition = 'transform 0.3s, opacity 0.3s';
+        card.style.transform = isRight ? 'translateX(300px)' : 'translateX(-300px)';
+        card.style.opacity = '0';
+
+        // După animație, elimină cardul și trece la următorul
+        setTimeout(() => {
+            card.remove();
+            currentIndex++;
+            if (currentIndex < cards.length) {
+                setupCard(cards[currentIndex]); // Activează următorul card
+            }
+        }, 300);
+    }
+
+    // Inițializează primul card
+    if (cards.length > 0) {
+        setupCard(cards[currentIndex]);
+    }
+
+        
+</script>
