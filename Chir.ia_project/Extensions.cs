@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Chir.ia_project.Services;
 using Chir.ia_project.Models.Repository;
 using Chir.ia_project.Models.Entities;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace Chir.ia_project
 {
@@ -18,6 +19,11 @@ namespace Chir.ia_project
 
             //builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<Context>();
 
+            //services.Configure<FormOptions>(options =>
+            //{
+            //    options.MultipartBodyLengthLimit = 5242880;
+            //});
+
             //services.AddScoped<DbSeeder>();
             return services;
         }
@@ -25,7 +31,8 @@ namespace Chir.ia_project
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<IMovieService, MovieService>()
-                .AddScoped<IListingService, ListingService>();
+                .AddScoped<IListingService, ListingService>()
+                .AddScoped<IImageService, ImageService>();
 
             return services;
         }
@@ -38,6 +45,7 @@ namespace Chir.ia_project
             .AddScoped<IListingRepository, ListingRepository>()
             .AddScoped<IListingEngagementRepository, ListingEngagementRepository>()
             .AddScoped<IMessageRepository, MessageRepository>()
-            .AddScoped<IUserConversationRepository, UserConversationRepository>();
+            .AddScoped<IUserConversationRepository, UserConversationRepository>()
+            .AddScoped<IImageRepository, ImageRepository>();
     }
 }

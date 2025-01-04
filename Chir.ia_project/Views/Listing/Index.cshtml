@@ -1,31 +1,39 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model Chir.ia_project.Services.Dtos.ListingsResponse
 
-@model Chir.ia_project.Services.Dtos.ListingResponse
-
-
-@foreach (var listing in @Model.ListingsList)
+@foreach (var listing in Model.ListingsList)
 {
-
     <div class="div_listing">
 
+        <!-- Listing Details -->
         <div>
             <p class="den_categorie">Seismic Risk: @listing.SeismicRisk</p>
             <p class="p_area">Area: @listing.TotalLivableArea</p>
             <p class="p_details">Details: @listing.Details</p>
         </div>
 
+        <!-- Listing Images -->
+        <div class="image-gallery">
+            @if (listing.Images != null && listing.Images.Any())
+            {
+                foreach (var image in listing.Images)
+                {
+                    <img src="data:@image.ContentType;base64,@Convert.ToBase64String(image.ContentBytes)" 
+                         alt="Listing Image" 
+                         class="img-thumbnail" 
+                         style="max-width: 200px; margin: 5px;" />
+                }
+            }
+            else
+            {
+                <p>No images available for this listing.</p>
+            }
+        </div>
+
+        <!-- Delete Listing Button -->
         <form method="post" action="/Listing/DeleteListing/@listing.Id">
-
             <button class="btn btn-danger" type="submit">Delete listing</button>
-
         </form>
 
         <br />
-        
-
     </div>
 }

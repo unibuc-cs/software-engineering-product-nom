@@ -1,0 +1,27 @@
+﻿@model Chir.ia_project.Services.Dtos.ImageRequest
+
+<h2>Upload Image</h2>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-success">
+        @ViewBag.Message
+    </div>
+}
+
+<form enctype="multipart/form-data" method="post">
+    <dl>
+        <dt>
+            <label asp-for="@Model.ImageFiles"></label>
+        </dt>
+        <dd>
+            <input asp-for="@Model.ImageFiles" type="file" multiple>
+        </dd>
+        <input type="hidden" name="EntityId" value="@Guid.NewGuid()"/>
+    </dl>
+    <input asp-page-handler="Upload" class="btn" type="submit" value="Upload">
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
