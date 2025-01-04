@@ -17,6 +17,7 @@ namespace Chir.ia_project.Models
         public DbSet<ListingEngagement> ListingEngagements { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<UserConversation> UserConversations { get; set; }
+        public DbSet<Image> Images { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -4,13 +4,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Chir.ia_project.Services.Dtos
 {
-    public class ListingResponse
+    public class ListingRequest
     {
-        public Guid Id { get; set; }
         public SeismicRisk SeismicRisk { get; set; }
         public double TotalLivableArea { get; set; }
+        [MaxLength(1024)]
         public string Details { get; set; }
+
         public Guid UserId { get; set; }
-        public List<ImageResponse> Images { get; set; } = new();
+
+        public ImageRequest ImageRequest { get; set; }
     }
 }

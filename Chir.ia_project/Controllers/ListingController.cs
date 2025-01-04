@@ -1,6 +1,7 @@
 ﻿using Chir.ia_project.Models.Entities;
 using Chir.ia_project.Models.Enum;
 using Chir.ia_project.Services;
+using Chir.ia_project.Services.Dtos;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +21,7 @@ namespace Chir.ia_project.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var returnVal = await listingService.GetAllListingsFormatStringAsync();
+            var returnVal = await listingService.GetAllListingsAsync();
             return View(returnVal);
         }
 
@@ -31,7 +32,7 @@ namespace Chir.ia_project.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AddListing(Listing listing)
+        public async Task<IActionResult> AddListing(ListingRequest listing)
         {
             var userId = userManager.GetUserId(User);
             
@@ -70,7 +71,7 @@ namespace Chir.ia_project.Controllers
         [HttpGet]
         public async Task<IActionResult> IndexSwipe()
         { 
-            var returnVal = await listingService.GetAllListingsFormatStringAsync();
+            var returnVal = await listingService.GetAllListingsAsync();
             return View(returnVal);
         }
 

@@ -10,6 +10,7 @@
         IListingEngagementRepository ListingEngagement { get; }
         IMessageRepository Message { get; }
         IUserConversationRepository UserConversation { get; }
+        IImageRepository Image { get; }
         Task<bool> SaveChangesAsync();
     }
 
@@ -24,12 +25,14 @@
         public IListingEngagementRepository ListingEngagement { get; }
         public IMessageRepository Message { get; }
         public IUserConversationRepository UserConversation { get; }
+        public IImageRepository Image { get; }
         
 
         public UnitOfWork(Context context, IMovieRepository movieRepository, 
             IUserRepository user, IConversationRepository conversation, 
             IListingRepository listingRepository, IListingEngagementRepository listingEngagementRepository,
-            IMessageRepository messageRepository, IUserConversationRepository userConversationRepository)
+            IMessageRepository messageRepository, IUserConversationRepository userConversationRepository,
+            IImageRepository imageRepository)
         {
             _context = context;
             Movie = movieRepository;
@@ -39,6 +42,7 @@
             ListingEngagement = listingEngagementRepository;
             Message = messageRepository;
             UserConversation = userConversationRepository;
+            Image = imageRepository;
         }
 
         public async Task<bool> SaveChangesAsync()

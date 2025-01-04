@@ -9,8 +9,8 @@ namespace Chir.ia_project.Services
 {
     public interface IListingService
     {
-        Task<ListingResponse> GetAllListingsFormatStringAsync();
-        Task InsertListingAsync(Listing listing, Guid id);
+        Task<ListingsResponse> GetAllListingsAsync();
+        Task InsertListingAsync(ListingRequest listing, Guid id);
         Task DeleteListingAsync(Guid Id);
         Task<Listing> GetByIdAsync(Guid Id);
 
@@ -18,34 +18,63 @@ namespace Chir.ia_project.Services
 
     public class ListingService : ServiceBase, IListingService
     {
-        public ListingService(IUnitOfWork unitOfWork) : base(unitOfWork) { }
+        private readonly IImageService imageService;
 
-        public async Task<ListingResponse> GetAllListingsFormatStringAsync()
+        public ListingService(IUnitOfWork unitOfWork, IImageService _imageService) :
+            base(unitOfWork)
         {
-            var ListingsDto = new ListingResponse();
+            imageService = _imageService;
+        }
+
+        public async Task<ListingsResponse> GetAllListingsAsync()
+        {
+            var ListingsDto = new ListingsResponse();
 
             var allListings = await UnitOfWork.Listing.GetAllAsync();
 
             foreach (var listing in allListings)
             {
-                ListingsDto.ListingsList.Add(listing);
+                var images = await UnitOfWork.Image.GetAllByEntityIdAsync(listing.Id);
+                ListingsDto.ListingsList.Add(new ListingResponse()
+                {
+                    Id = listing.Id,
+                    SeismicRisk = listing.SeismicRisk,
+                    TotalLivableArea = listing.TotalLivableArea,
+                    Details = listing.Details,
+                    UserId = listing.UserId,
+                    Images = images.Select(i => new ImageResponse()
+                    {
+                        ContentBytes = i.ContentBytes, ContentType = i.ContentType
+                    }).ToList()
+                });
             }
             
-
             return ListingsDto;
         }
 
-        public async Task InsertListingAsync(Listing listing, Guid id)
+        public async Task InsertListingAsync(ListingRequest listing, Guid id)
         {
             listing.UserId = id;
-            UnitOfWork.Listing.Add(listing);
+            var newListing = new Listing()
+            {
+                SeismicRisk = listing.SeismicRisk,
+                TotalLivableArea = listing.TotalLivableArea,
+                Details = listing.Details,
+                UserId = listing.UserId,
+            };
+            UnitOfWork.Listing.Add(newListing);
+
             await UnitOfWork.SaveChangesAsync();
 
+            listing.ImageRequest.EntityId = newListing.Id;
+            await imageService.UploadImagesAsync(listing.ImageRequest); //calls SaveChangesAsync() inside
         }
 
         public async Task DeleteListingAsync(Guid id)
         {
             var listing = await UnitOfWork.Listing.GetByIdAsync(id);
+            var images = await UnitOfWork.Image.GetAllByEntityIdAsync(id);
+            UnitOfWork.Image.DeleteRange(images);
             UnitOfWork.Listing.Delete(listing);
             await UnitOfWork.SaveChangesAsync();
         }
