@@ -1,39 +1,198 @@
 ﻿@model Chir.ia_project.Services.Dtos.ListingsResponse
 
-@foreach (var listing in Model.ListingsList)
-{
-    <div class="div_listing">
+<style>
+    .image-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-        <!-- Listing Details -->
-        <div>
-            <p class="den_categorie">Seismic Risk: @listing.SeismicRisk</p>
-            <p class="p_area">Area: @listing.TotalLivableArea</p>
-            <p class="p_details">Details: @listing.Details</p>
-        </div>
+    .responsive-image {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        opacity: 0;
+        position: absolute;
+        transition: opacity 0.3s ease;
+    }
 
-        <!-- Listing Images -->
-        <div class="image-gallery">
-            @if (listing.Images != null && listing.Images.Any())
-            {
-                foreach (var image in listing.Images)
+    .responsive-image.active {
+        opacity: 1;
+        position: relative;
+    }
+
+    .nav-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.8);
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 3;
+        transition: background-color 0.3s;
+    }
+
+    .nav-arrow:hover {
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    .nav-arrow.prev {
+        left: 10px;
+    }
+
+    .nav-arrow.next {
+        right: 10px;
+    }
+
+    .image-counter {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+    }
+
+    .cards-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .card {
+        width: 100%;
+        height: 400px; /* Reduced height */
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .images {
+        height: 200px; /* Reduced height for images section */
+    }
+
+    .info {
+        padding: 10px;
+        font-size: 0.9em; /* Slightly smaller text */
+    }
+
+    .info p {
+        margin: 5px 0;
+    }
+
+    .btn-danger {
+        padding: 5px 10px;
+        font-size: 0.9em;
+    }
+</style>
+
+<div class="cards-container">
+    @foreach (var listing in Model.ListingsList)
+    {
+        <div class="card">
+            <div class="card-body">
+                @if (listing.Images != null && listing.Images.Count > 0)
                 {
-                    <img src="data:@image.ContentType;base64,@Convert.ToBase64String(image.ContentBytes)" 
-                         alt="Listing Image" 
-                         class="img-thumbnail" 
-                         style="max-width: 200px; margin: 5px;" />
+                    <div class="images">
+                        <div class="image-container">
+                            @foreach (var image in listing.Images)
+                            {
+                                <img src="data:@image.ContentType;base64,@Convert.ToBase64String(image.ContentBytes)"
+                                     alt="Listing Image" 
+                                     class="responsive-image" 
+                                     draggable="false" />
+                            }
+                            @if (listing.Images.Count > 1)
+                            {
+                                <button class="nav-arrow prev">←</button>
+                                <button class="nav-arrow next">→</button>
+                                <div class="image-counter">1 / @listing.Images.Count</div>
+                            }
+                        </div>
+                    </div>
                 }
-            }
-            else
-            {
-                <p>No images available for this listing.</p>
-            }
+                else
+                {
+                    <div class="images">
+                        <p>No images available for this listing.</p>
+                    </div>
+                }
+
+                <div class="info">
+                    <p>Seismic Risk: @listing.SeismicRisk</p>
+                    <p>Area: @listing.TotalLivableArea</p>
+                    <p>Details: @listing.Details</p>
+                    
+                    <div style="display: flex; gap: 10px; justify-content: center;">
+                        <form method="post" action="/Listing/DeleteListing/@listing.Id" style="margin: 0;">
+                            <button class="btn btn-danger" type="submit" style="width: 120px; height: 38px; font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">Delete listing</button>
+                        </form>
+                        <a href="/Listing/Edit/@listing.Id" class="btn btn-primary" style="width: 120px; height: 38px; font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; display: flex; align-items: center; justify-content: center; text-decoration: none;">Edit listing</a>
+                    </div>
+                </div>
+            </div>
         </div>
+    }
+</div>
 
-        <!-- Delete Listing Button -->
-        <form method="post" action="/Listing/DeleteListing/@listing.Id">
-            <button class="btn btn-danger" type="submit">Delete listing</button>
-        </form>
+<script>
+    // Initialize all cards
+    document.querySelectorAll('.card').forEach(card => {
+        // Initialize first image
+        const images = Array.from(card.querySelectorAll('.responsive-image'));
+        if (images.length > 0) {
+            images[0].classList.add('active');
+        }
 
-        <br />
-    </div>
-}
+        // Set up image navigation
+        const prevBtn = card.querySelector('.nav-arrow.prev');
+        const nextBtn = card.querySelector('.nav-arrow.next');
+
+        if (prevBtn && nextBtn) {
+            let currentImageIndex = 0;
+            const counter = card.querySelector('.image-counter');
+
+            prevBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (currentImageIndex > 0) {
+                    images[currentImageIndex].classList.remove('active');
+                    currentImageIndex--;
+                    images[currentImageIndex].classList.add('active');
+                    updateCounter();
+                }
+            });
+
+            nextBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (currentImageIndex < images.length - 1) {
+                    images[currentImageIndex].classList.remove('active');
+                    currentImageIndex++;
+                    images[currentImageIndex].classList.add('active');
+                    updateCounter();
+                }
+            });
+
+            function updateCounter() {
+                counter.textContent = `${currentImageIndex + 1} / ${images.length}`;
+            }
+        }
+    });
+</script>
