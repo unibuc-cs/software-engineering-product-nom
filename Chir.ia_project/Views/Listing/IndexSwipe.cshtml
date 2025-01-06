@@ -1,55 +1,147 @@
-﻿@model Chir.ia_project.Services.Dtos.ListingsResponse
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"/>
+﻿<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
 <style>
+    /* Previous styles remain the same until images section */
     html, body {
         margin: 0;
         padding: 0;
         width: 100%;
         height: 100%;
-        overflow: hidden; /* Prevent overflow */
     }
 
     .card-container {
-        justify-content: center; /* Center horizontally */
-        align-items: center; /* Center vertically */
-        width: 100vw; /* Full width */
-        height: 100vh; /* Full height */
-        overflow: hidden; /* Prevent overflow */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        min-height: 700px;
+        position: relative;
+        z-index: 1;
     }
 
     .card {
-        width: 60%; /* Responsive width */
-        height: 70%; /* Fixed height */
-        overflow: hidden;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 400px;
+        height: 600px;
         position: absolute;
         background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
         cursor: grab;
-        z-index: 10;
-        transition: transform 0.3s, opacity 0.3s;
-        top: 50%; /* Initial vertical centering */
-        left: 50%; /* Initial horizontal centering */
-        transform: translate(-50%, -50%); /* Correct centering for all cards */
-        opacity: 0; /* Initially hide all cards */
+        transform: translateX(-50%) translateY(-50%);
+        left: 50%;
+        top: 50%;
     }
 
-        .card.active {
-            z-index: 20; /* Ensure the active card is in front */
-            opacity: 1; /* Make the active card visible */
+    @@media (max-width: 480px) {
+        .card
+
+    {
+        width: 90%;
+        height: 80vh;
+    }
+
+    }
+
+    .card.active {
+        opacity: 1;
+        z-index: 2;
+    }
+
+    .card-body {
+        flex: 1;
+        overflow: hidden;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .images {
+        flex: 1;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: #f8f8f8;
+    }
+
+    .image-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .responsive-image {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        pointer-events: none;
+        opacity: 0;
+        position: absolute;
+        transition: opacity 0.3s ease;
+    }
+
+        .responsive-image.active {
+            opacity: 1;
+            position: relative;
         }
 
-        .card img {
-            width: 100%;
-            height: 70%;
-            object-fit: cover;
+    .nav-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.8);
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 3;
+        transition: background-color 0.3s;
+    }
+
+        .nav-arrow:hover {
+            background: rgba(255, 255, 255, 0.9);
         }
 
-        .card .info {
-            padding: 10px;
-            text-align: center;
+        .nav-arrow.prev {
+            left: 10px;
         }
- 
+
+        .nav-arrow.next {
+            right: 10px;
+        }
+
+    .info {
+        padding: 15px;
+        text-align: center;
+        background: white;
+    }
+
+    /* Image counter style */
+    .image-counter {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+    }
 </style>
 
 <div class="card-container" id="cardContainer">
@@ -57,133 +149,154 @@
     {
         var listing = Model.ListingsList[i];
         <div class="card @(i == 0 ? "active" : "")" data-id="@listing.Id">
-            @*<img src="@item.ImageUrl" alt="@item.Title" />*@
-            <div class="info">
-                <p>@listing.SeismicRisk</p>
-                <p>@listing.TotalLivableArea</p>
-                <p>@listing.Details</p>
+            <div class="card-body">
+                @if (listing.Images != null && listing.Images.Count > 0)
+                {
+                    <div class="images">
+                        <div class="image-container">
+                            @foreach (var image in listing.Images)
+                            {
+                                <img src="data:@image.ContentType;base64,@Convert.ToBase64String(image.ContentBytes)"
+                                     alt="Image for @listing.Id" class="responsive-image" draggable="false" />
+                            }
+                            @if (listing.Images.Count > 1)
+                            {
+                                <button class="nav-arrow prev">←</button>
+                                <button class="nav-arrow next">→</button>
+                                <div class="image-counter">1 / @listing.Images.Count</div>
+                            }
+                        </div>
+                    </div>
+                }
+                <div class="info">
+                    <p>@listing.SeismicRisk</p>
+                    <p>@listing.TotalLivableArea</p>
+                    <p>@listing.Details</p>
+                </div>
             </div>
         </div>
     }
 </div>
 
 <script>
+    // Previous card swipe code remains the same...
     const cardContainer = document.getElementById('cardContainer');
-    const cards = document.querySelectorAll('.card');
-    let currentIndex = 0; // Current card index
-    let startX = 0; // Initial position
-    let currentX = 0; // Current position
+    const cards = Array.from(document.querySelectorAll('.card'));
+    let currentIndex = 0;
+    let startX = 0;
+    let offsetX = 0;
     let isDragging = false;
 
-    // Initialize the first card
+    // Initialize cards and image navigation
     if (cards.length > 0) {
-        cards[0].classList.add('active'); // Ensure the first card is active
-        setupCard(cards[0]);
+        activateCard(cards[0]);
     }
 
-    function setupCard(card) {
-        let offsetX = 0; // Card position
+    function activateCard(card) {
+        card.classList.add('active');
+        card.addEventListener('mousedown', (e) => startDragging(e, card));
+        card.addEventListener('touchstart', (e) => startDragging(e, card), { passive: true });
 
-        // Mouse Down event
-        card.addEventListener('mousedown', (e) => {
-            startX = e.clientX; // Save start position
-            isDragging = true;
-            card.style.cursor = 'grabbing';
-            card.style.transition = 'none'; // Disable transition during drag
+        // Initialize first image
+        const images = Array.from(card.querySelectorAll('.responsive-image'));
+        if (images.length > 0) {
+            images[0].classList.add('active');
+        }
 
-            // Mouse Move event
-            const onMouseMove = (e) => {
-                if (!isDragging) return;
-                const diffX = e.clientX - startX; // Calculate displacement
-                offsetX = diffX;
-                card.style.transform = `translate(-50%, -50%) translateX(${diffX}px)`; // Move card
-            };
+        // Set up image navigation
+        const prevBtn = card.querySelector('.nav-arrow.prev');
+        const nextBtn = card.querySelector('.nav-arrow.next');
 
-            // Mouse Up event
-            const onMouseUp = () => {
-                isDragging = false;
-                card.style.cursor = 'grab';
-                card.style.transition = 'transform 0.3s, opacity 0.3s'; // Re-enable transition
+        if (prevBtn && nextBtn) {
+            let currentImageIndex = 0;
+            const counter = card.querySelector('.image-counter');
 
-                // Detect swipe
-                if (offsetX > 100) { // Swipe right
-                    removeCard(card, true);
-                } else if (offsetX < -100) { // Swipe left
-                    removeCard(card, false);
-                } else {
-                    // Return to initial position
-                    card.style.transform = 'translate(-50%, -50%) translateX(0px)';
+            prevBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (currentImageIndex > 0) {
+                    images[currentImageIndex].classList.remove('active');
+                    currentImageIndex--;
+                    images[currentImageIndex].classList.add('active');
+                    updateCounter();
                 }
+            });
 
-                // Remove mouse events
-                document.removeEventListener('mousemove', onMouseMove);
-                document.removeEventListener('mouseup', onMouseUp);
-            };
+            nextBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (currentImageIndex < images.length - 1) {
+                    images[currentImageIndex].classList.remove('active');
+                    currentImageIndex++;
+                    images[currentImageIndex].classList.add('active');
+                    updateCounter();
+                }
+            });
 
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
-        });
-
-            card.addEventListener('touchstart', handleTouchStart);
-
-        function handleTouchStart(e) {
-            startX = e.touches[0].clientX;
-            isDragging = true;
-            card.style.transition = 'none';
-
-            document.addEventListener('touchmove', handleTouchMove, { passive: false });
-            document.addEventListener('touchend', handleTouchEnd);
-            document.addEventListener('touchcancel', handleTouchEnd);
-        }
-
-        function handleTouchMove(e) {
-            if (!isDragging) return;
-            e.preventDefault(); // Prevent scrolling while dragging
-            const touch = e.touches[0];
-            const diffX = touch.clientX - startX;
-            offsetX = diffX;
-            card.style.transform = `translate(-50%, -50%) translateX(${diffX}px)`;
-        }
-
-        function handleTouchEnd() {
-            if (!isDragging) return;
-            isDragging = false;
-            card.style.transition = 'transform 0.3s, opacity 0.3s';
-
-            if (offsetX > 100) {
-                removeCard(card, true);
-            } else if (offsetX < -100) {
-                removeCard(card, false);
-            } else {
-                card.style.transform = 'translate(-50%, -50%) translateX(0px)';
+            function updateCounter() {
+                counter.textContent = `${currentImageIndex + 1} / ${images.length}`;
             }
-
-            document.removeEventListener('touchmove', handleTouchMove);
-            document.removeEventListener('touchend', handleTouchEnd);
-            document.removeEventListener('touchcancel', handleTouchEnd);
         }
     }
 
-    // Remove the current card and activate the next one
+    // Rest of the previous functions remain the same...
+    function startDragging(e, card) {
+        if (e.target.tagName.toLowerCase() === 'img' || e.target.classList.contains('nav-arrow')) return;
+
+        startX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
+        isDragging = true;
+        card.style.transition = 'none';
+        offsetX = 0;
+
+        const moveHandler = (event) => dragCard(event, card);
+        const endHandler = () => stopDragging(card, moveHandler, endHandler);
+
+        if (e.type === 'mousedown') {
+            document.addEventListener('mousemove', moveHandler);
+            document.addEventListener('mouseup', endHandler);
+        } else {
+            document.addEventListener('touchmove', moveHandler, { passive: false });
+            document.addEventListener('touchend', endHandler);
+            document.addEventListener('touchcancel', endHandler);
+        }
+    }
+
+    function dragCard(e, card) {
+        if (!isDragging) return;
+        e.preventDefault();
+        const clientX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
+        offsetX = clientX - startX;
+        card.style.transform = `translateX(calc(-50% + ${offsetX}px)) translateY(-50%)`;
+    }
+
+    function stopDragging(card, moveHandler, endHandler) {
+        if (!isDragging) return;
+
+        isDragging = false;
+        card.style.transition = 'transform 0.3s, opacity 0.3s';
+
+        if (Math.abs(offsetX) > 100) {
+            removeCard(card, offsetX > 0);
+        } else {
+            card.style.transform = 'translateX(-50%) translateY(-50%)';
+        }
+
+        document.removeEventListener('mousemove', moveHandler);
+        document.removeEventListener('mouseup', endHandler);
+        document.removeEventListener('touchmove', moveHandler);
+        document.removeEventListener('touchend', endHandler);
+        document.removeEventListener('touchcancel', endHandler);
+    }
+
     function removeCard(card, isRight) {
-        card.style.transform = isRight ? 'translate(calc(-50% + 300px), -50%)' : 'translate(calc(-50% - 300px), -50%)';
+        const direction = isRight ? 300 : -300;
+        card.style.transform = `translateX(calc(-50% + ${direction}px)) translateY(-50%)`;
         card.style.opacity = '0';
 
-        // After animation, remove card and move to the next one
         setTimeout(() => {
             card.remove();
-            if (cards.length > 0) {
-                currentIndex++;
-                if (currentIndex < cards.length) {
-                    if (currentIndex > 0) {
-                        cards[currentIndex - 1]?.classList.remove('active'); // Remove active from the previous card
-                    }
-                    cards[currentIndex].classList.add('active');
-                    setupCard(cards[currentIndex]); // Activate the next card
-                }
+            cards.splice(currentIndex, 1);
+            if (cards.length > 0 && currentIndex < cards.length) {
+                activateCard(cards[currentIndex]);
             }
         }, 300);
     }
-
-
 </script>
