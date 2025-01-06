@@ -1,4 +1,5 @@
-﻿<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
+﻿@using Chir.ia_project.Models.Enum
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
 <style>
     /* Previous styles remain the same until images section */
     html, body {
@@ -169,7 +170,7 @@
                     </div>
                 }
                 <div class="info">
-                    <p>@listing.SeismicRisk</p>
+                    <img src="~/@(SeismicRiskExtension.ToFriendlyString(listing.SeismicRisk))_seismic_risk.jpg" alt="@listing.SeismicRisk seismic risk" style="width: 5vw; height: 5vw;" />
                     <p>@listing.TotalLivableArea</p>
                     <p>@listing.Details</p>
                 </div>

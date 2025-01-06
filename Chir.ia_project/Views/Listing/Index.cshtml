@@ -137,7 +137,9 @@
                 }
 
                 <div class="info">
-                    <p>Seismic Risk: @listing.SeismicRisk</p>
+                    <img src="~/images/@(listing.SeismicRisk.ToString().ToLower()).png" 
+                         alt="@listing.SeismicRisk seismic risk" 
+                         style="width: 24px; height: 24px;" />
                     <p>Area: @listing.TotalLivableArea</p>
                     <p>Details: @listing.Details</p>
                     
