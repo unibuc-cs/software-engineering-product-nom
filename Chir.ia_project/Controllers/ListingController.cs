@@ -1,16 +1,20 @@
-﻿using Chir.ia_project.Models.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Reflection;
+using Chir.ia_project.Models.Entities;
 using Chir.ia_project.Models.Enum;
 using Chir.ia_project.Services;
 using Chir.ia_project.Services.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Chir.ia_project.Controllers
 {
     public class ListingController : Controller
     {
         private readonly IListingService listingService;
-        private readonly UserManager<User> userManager;
+        protected readonly UserManager<User> userManager;
 
         public ListingController(IListingService _listingsService, UserManager<User> _userManager)
         {
@@ -19,45 +23,40 @@ namespace Chir.ia_project.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Index()
         {
-            var returnVal = await listingService.GetAllListingsAsync();
+            var userId = userManager.GetUserId(User);
+
+            var returnVal = await listingService.GetMyListingsAsync(Guid.Parse(userId));
             return View(returnVal);
         }
 
+
+        [HttpGet]
         public async Task<IActionResult> AddListing()
         {
             return View();
         }
 
-
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddListing(ListingRequest listing)
         {
             var userId = userManager.GetUserId(User);
-            
-            Console.WriteLine(userId);
-            Guid userGuid;
 
-            if (Guid.TryParse(userId, out userGuid))
-            {
-                // Conversia a reușit
-                Console.WriteLine($"GUID valid");
-            }
-            else
-            {
-                // Conversia a eșuat
-                throw new FormatException("User ID-ul nu este un GUID valid.");
-            }
-            await listingService.InsertListingAsync(listing, userGuid);
+            await listingService.InsertListingAsync(listing, Guid.Parse(userId));
 
             return RedirectToAction("Index");
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> DeleteListing(Guid id)
         {
-            await listingService.DeleteListingAsync(id);
+            var userId = userManager.GetUserId(User);
+
+            await listingService.DeleteListingAsync(id, Guid.Parse(userId));
             return RedirectToAction("Index");
         }
 

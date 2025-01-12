@@ -12,7 +12,7 @@ namespace Chir.ia_project.Models.Enum
 
     public static class SeismicRiskExtension
     {
-        public static string ToFriendlyString(this SeismicRisk me)
+        public static string ToFriendlyString(SeismicRisk me)
         {
             switch (me)
             {
