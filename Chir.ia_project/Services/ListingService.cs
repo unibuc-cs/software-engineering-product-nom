@@ -11,9 +11,9 @@ namespace Chir.ia_project.Services
     {
         Task<ListingsResponse> GetAllListingsAsync();
         Task InsertListingAsync(ListingRequest listing, Guid id);
-        Task DeleteListingAsync(Guid Id);
+        Task DeleteListingAsync(Guid Id, Guid userId);
         Task<Listing> GetByIdAsync(Guid Id);
-
+        Task<ListingsResponse> GetMyListingsAsync(Guid userId);
     }
 
     public class ListingService : ServiceBase, IListingService
@@ -25,6 +25,35 @@ namespace Chir.ia_project.Services
         {
             imageService = _imageService;
         }
+
+
+        public async Task<ListingsResponse> GetMyListingsAsync(Guid userId)
+        {
+            var ListingsDto = new ListingsResponse();
+
+            var allListings = await UnitOfWork.Listing.GetAllByUserIdAsync(userId);
+
+            foreach (var listing in allListings)
+            {
+                var images = await UnitOfWork.Image.GetAllByEntityIdAsync(listing.Id);
+                ListingsDto.ListingsList.Add(new ListingResponse()
+                {
+                    Id = listing.Id,
+                    SeismicRisk = listing.SeismicRisk,
+                    TotalLivableArea = listing.TotalLivableArea,
+                    Details = listing.Details,
+                    UserId = listing.UserId,
+                    Images = images.Select(i => new ImageResponse()
+                    {
+                        ContentBytes = i.ContentBytes,
+                        ContentType = i.ContentType
+                    }).ToList()
+                });
+            }
+
+            return ListingsDto;
+        }
+
 
         public async Task<ListingsResponse> GetAllListingsAsync()
         {
@@ -70,9 +99,14 @@ namespace Chir.ia_project.Services
             await imageService.UploadImagesAsync(listing.ImageRequest); //calls SaveChangesAsync() inside
         }
 
-        public async Task DeleteListingAsync(Guid id)
+        public async Task DeleteListingAsync(Guid id, Guid userId)
         {
             var listing = await UnitOfWork.Listing.GetByIdAsync(id);
+            if (listing.UserId != userId)
+            {
+                throw new BadHttpRequestException("This user cannot modify the listing.");
+            }
+
             var images = await UnitOfWork.Image.GetAllByEntityIdAsync(id);
             UnitOfWork.Image.DeleteRange(images);
             UnitOfWork.Listing.Delete(listing);

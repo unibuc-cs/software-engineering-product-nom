@@ -1,4 +1,6 @@
-﻿@model Chir.ia_project.Services.Dtos.ListingsResponse
+﻿@using Chir.ia_project.Models.Enum
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Chir.ia_project.Services.Dtos.ListingsResponse
 
 <style>
     .image-container {
@@ -137,9 +139,7 @@
                 }
 
                 <div class="info">
-                    <img src="~/images/@(listing.SeismicRisk.ToString().ToLower()).png" 
-                         alt="@listing.SeismicRisk seismic risk" 
-                         style="width: 24px; height: 24px;" />
+                    <img src="~/@(SeismicRiskExtension.ToFriendlyString(listing.SeismicRisk))_seismic_risk.jpg" alt="@listing.SeismicRisk seismic risk" style="width: 2vw; height: 2vw;" />
                     <p>Area: @listing.TotalLivableArea</p>
                     <p>Details: @listing.Details</p>
                     
