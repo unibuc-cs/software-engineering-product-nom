@@ -14,6 +14,7 @@ namespace Chir.ia_project.Services
         Task DeleteListingAsync(Guid Id, Guid userId);
         Task<Listing> GetByIdAsync(Guid Id);
         Task<ListingsResponse> GetMyListingsAsync(Guid userId);
+        Task UpdateListingAsync(ListingRequest listing, Guid id, Guid guid);
     }
 
     public class ListingService : ServiceBase, IListingService
@@ -116,6 +117,31 @@ namespace Chir.ia_project.Services
         public async Task<Listing> GetByIdAsync(Guid id)
         {
             return await UnitOfWork.Listing.GetByIdAsync(id);
+        }
+
+        public async Task UpdateListingAsync(ListingRequest listing, Guid id, Guid userId)
+        {
+            var existingListing = await UnitOfWork.Listing.GetByIdAsync(id);
+            if (existingListing == null || existingListing.UserId != userId)
+            {
+                throw new BadHttpRequestException("This user cannot modify the listing.");
+            }
+
+            existingListing.SeismicRisk = listing.SeismicRisk;
+            existingListing.TotalLivableArea = listing.TotalLivableArea;
+            existingListing.Details = listing.Details;
+
+            // Handle image updates
+            if (listing.ImageRequest?.ImageFiles?.Any() == true)
+            {
+                var existingImages = await UnitOfWork.Image.GetAllByEntityIdAsync(listing.UserId);
+                UnitOfWork.Image.DeleteRange(existingImages);
+                listing.ImageRequest.EntityId = listing.UserId;
+                await imageService.UploadImagesAsync(listing.ImageRequest);
+            }
+
+            UnitOfWork.Listing.Update(existingListing);
+            await UnitOfWork.SaveChangesAsync();
         }
 
     }

@@ -1,0 +1,47 @@
+﻿@model Chir.ia_project.Services.Dtos.ListingRequest
+
+<h2 class="text-center mt-5">Edit Listing</h2>
+<br />
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-6 offset-3">
+            @using (Html.BeginForm(actionName: "EditListing", controllerName: "Listing", method: FormMethod.Post, htmlAttributes: new { enctype = "multipart/form-data" }))
+            {
+                @Html.HiddenFor(m => m.UserId)
+
+                @Html.Label("Text", "Select seismic risk:")
+                @Html.DropDownListFor(m => m.SeismicRisk, new List<SelectListItem>
+            {
+            new SelectListItem { Text = "None", Value = "0" },
+            new SelectListItem { Text = "Low", Value = "1" },
+            new SelectListItem { Text = "Medium", Value = "2" },
+            new SelectListItem { Text = "High", Value = "3" }
+            }, "Select one option", new { @class = "form-control" })
+
+                <br />
+                <br />
+
+                @Html.LabelFor(m => m.TotalLivableArea, "Total livable area:")
+                <br />
+                @Html.TextAreaFor(m => m.TotalLivableArea, new { @class = "form-control" })
+                <br />
+                <br />
+
+                @Html.LabelFor(m => m.Details, "Details:")
+                <br />
+                @Html.TextAreaFor(m => m.Details, new { @class = "form-control" })
+                <br />
+                <br />
+
+                @Html.Label("File", "Upload Images (optional):")
+                <br />
+                <input type="file" name="ImageRequest.ImageFiles" multiple class="form-control" />
+                <br />
+                <br />
+
+                <button class="btn btn-primary" type="submit">Save Changes</button>
+            }
+        </div>
+    </div>
+</div>

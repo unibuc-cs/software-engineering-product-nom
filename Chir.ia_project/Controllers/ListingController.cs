@@ -74,5 +74,36 @@ namespace Chir.ia_project.Controllers
             return View(returnVal);
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> EditListing(Guid id)
+        {
+            var listing = await listingService.GetByIdAsync(id);
+            if (listing == null)
+            {
+                return NotFound();
+            }
+
+            // Map Listing entity to a ListingRequest DTO
+            var listingRequest = new ListingRequest
+            {
+                SeismicRisk = listing.SeismicRisk,
+                TotalLivableArea = listing.TotalLivableArea,
+                Details = listing.Details,
+                ImageRequest = new ImageRequest { EntityId = listing.Id }
+            };
+
+            return View(listingRequest);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> EditListing(Guid id, ListingRequest listing)
+        {
+            var userId = userManager.GetUserId(User);
+            await listingService.UpdateListingAsync(listing, id, Guid.Parse(userId));
+            return RedirectToAction("Index");
+        }
+
     }
 }
