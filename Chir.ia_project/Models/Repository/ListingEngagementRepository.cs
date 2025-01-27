@@ -27,8 +27,7 @@ namespace Chir.ia_project.Models.Repository
 
         public async Task<ListingEngagement> FirstOrDefaultAsync(Expression<Func<ListingEngagement, bool>> predicate)
         {
-            return await _context.ListingEngagements
-                .FirstOrDefaultAsync(predicate);
+            return await _context.ListingEngagements.FirstOrDefaultAsync(predicate);
         }
     }
 }
