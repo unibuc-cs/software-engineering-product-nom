@@ -105,5 +105,29 @@ namespace Chir.ia_project.Controllers
             return RedirectToAction("Index");
         }
 
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> LikedListings()
+        {
+            var userId = userManager.GetUserId(User);
+            var engagements = await listingService.GetUserEngagementsAsync(Guid.Parse(userId), LikeValue.Liked);
+            return View(engagements);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> AddEngagement([FromBody] EngagementRequest request)
+        {
+            var userId = userManager.GetUserId(User);
+            await listingService.AddEngagementAsync(request.ListingId, Guid.Parse(userId), request.LikeValue);
+            return Ok();
+        }
+
+        public class EngagementRequest
+        {
+            public Guid ListingId { get; set; }
+            public LikeValue LikeValue { get; set; }
+        }
     }
 }

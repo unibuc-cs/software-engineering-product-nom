@@ -4,6 +4,7 @@ using Chir.ia_project.Models.Repository;
 using Chir.ia_project.Services.Common;
 using Chir.ia_project.Services.Dtos;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chir.ia_project.Services
 {
@@ -15,6 +16,8 @@ namespace Chir.ia_project.Services
         Task<Listing> GetByIdAsync(Guid Id);
         Task<ListingsResponse> GetMyListingsAsync(Guid userId);
         Task UpdateListingAsync(ListingRequest listing, Guid id, Guid guid);
+        Task AddEngagementAsync(Guid listingId, Guid userId, LikeValue likeValue);
+        Task<List<ListingEngagement>> GetUserEngagementsAsync(Guid userId, LikeValue likeValue);
     }
 
     public class ListingService : ServiceBase, IListingService
@@ -144,5 +147,37 @@ namespace Chir.ia_project.Services
             await UnitOfWork.SaveChangesAsync();
         }
 
+
+        public async Task AddEngagementAsync(Guid listingId, Guid userId, LikeValue likeValue)
+        {
+            var existing = await UnitOfWork.ListingEngagement
+                .FirstOrDefaultAsync(le => le.ListingId == listingId && le.UserId == userId);
+
+            if (existing != null)
+            {
+                existing.LikeValue = likeValue;
+            }
+            else
+            {
+                var engagement = new ListingEngagement
+                {
+                    ListingId = listingId,
+                    UserId = userId,
+                    LikeValue = likeValue,
+                    IsFavourited = false
+                };
+                UnitOfWork.ListingEngagement.Add(engagement);
+            }
+
+            await UnitOfWork.SaveChangesAsync();
+        }
+
+        public async Task<List<ListingEngagement>> GetUserEngagementsAsync(Guid userId, LikeValue likeValue)
+        {
+            return await UnitOfWork.ListingEngagement.Query()
+                .Include(le => le.Listing)
+                .Where(le => le.UserId == userId && le.LikeValue == likeValue)
+                .ToListAsync();
+        }
     }
 }

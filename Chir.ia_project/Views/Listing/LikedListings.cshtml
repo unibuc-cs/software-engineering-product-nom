@@ -1,0 +1,25 @@
+﻿@model List<Chir.ia_project.Models.Entities.ListingEngagement>
+
+@{
+    ViewData["Title"] = "Liked Listings";
+}
+
+<div class="container">
+    <h2>Your Liked Listings</h2>
+    
+    <div class="row">
+        @foreach (var engagement in Model)
+        {
+            var listing = engagement.Listing;
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@listing.Details</h5>
+                        <p class="card-text">Area: @listing.TotalLivableArea</p>
+                        <a href="@Url.Action("GetById", new { id = listing.Id })" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

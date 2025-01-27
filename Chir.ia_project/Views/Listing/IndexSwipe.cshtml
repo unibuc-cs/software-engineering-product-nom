@@ -288,16 +288,32 @@
     }
 
     function removeCard(card, isRight) {
-        const direction = isRight ? 300 : -300;
-        card.style.transform = `translateX(calc(-50% + ${direction}px)) translateY(-50%)`;
-        card.style.opacity = '0';
+    const direction = isRight ? 300 : -300;
+    card.style.transform = `translateX(calc(-50% + ${direction}px)) translateY(-50%)`;
+    card.style.opacity = '0';
 
-        setTimeout(() => {
-            card.remove();
-            cards.splice(currentIndex, 1);
-            if (cards.length > 0 && currentIndex < cards.length) {
-                activateCard(cards[currentIndex]);
-            }
-        }, 300);
+    // Send engagement data to server
+    if (isRight) {
+        const listingId = card.dataset.id;
+        fetch('/Listing/AddEngagement', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+            },
+            body: JSON.stringify({
+                listingId: listingId,
+                likeValue: @((int)LikeValue.Liked)
+            })
+        });
     }
+
+    setTimeout(() => {
+        card.remove();
+        cards.splice(currentIndex, 1);
+        if (cards.length > 0 && currentIndex < cards.length) {
+            activateCard(cards[currentIndex]);
+        }
+    }, 300);
+}
 </script>
