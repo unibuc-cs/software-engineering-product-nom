@@ -16,8 +16,8 @@ namespace Chir.ia_project.Services
         Task<Listing> GetByIdAsync(Guid Id);
         Task<ListingsResponse> GetMyListingsAsync(Guid userId);
         Task UpdateListingAsync(ListingRequest listing, Guid id, Guid guid);
-        Task AddEngagementAsync(Guid listingId, Guid userId, LikeValue likeValue);
-        Task<List<ListingEngagement>> GetUserEngagementsAsync(Guid userId, LikeValue likeValue);
+        Task<ListingsResponse> GetNotSwipedListingsAsync(Guid userId);
+
     }
 
     public class ListingService : ServiceBase, IListingService
@@ -148,36 +148,35 @@ namespace Chir.ia_project.Services
         }
 
 
-        public async Task AddEngagementAsync(Guid listingId, Guid userId, LikeValue likeValue)
+        public async Task<ListingsResponse> GetNotSwipedListingsAsync(Guid userId)
         {
-            var existing = await UnitOfWork.ListingEngagement
-                .FirstOrDefaultAsync(le => le.ListingId == listingId && le.UserId == userId);
+            List<Guid> swipedListings = await UnitOfWork.ListingEngagement.GetListingIdsFromListingsEngagementsByUserIdAsync(userId);
+            var notSwipedListings =  await UnitOfWork.Listing.GetNotSwipedListingsAsync(userId, swipedListings);
 
-            if (existing != null)
+            var ListingsDto = new ListingsResponse();
+
+
+            foreach (var listing in notSwipedListings)
             {
-                existing.LikeValue = likeValue;
-            }
-            else
-            {
-                var engagement = new ListingEngagement
+                var images = await UnitOfWork.Image.GetAllByEntityIdAsync(listing.Id);
+                ListingsDto.ListingsList.Add(new ListingResponse()
                 {
-                    ListingId = listingId,
-                    UserId = userId,
-                    LikeValue = likeValue,
-                    IsFavourited = false
-                };
-                UnitOfWork.ListingEngagement.Add(engagement);
+                    Id = listing.Id,
+                    SeismicRisk = listing.SeismicRisk,
+                    TotalLivableArea = listing.TotalLivableArea,
+                    Details = listing.Details,
+                    UserId = listing.UserId,
+                    Images = images.Select(i => new ImageResponse()
+                    {
+                        ContentBytes = i.ContentBytes,
+                        ContentType = i.ContentType
+                    }).ToList()
+                });
             }
 
-            await UnitOfWork.SaveChangesAsync();
+            return ListingsDto;
+
         }
 
-        public async Task<List<ListingEngagement>> GetUserEngagementsAsync(Guid userId, LikeValue likeValue)
-        {
-            return await UnitOfWork.ListingEngagement.Query()
-                .Include(le => le.Listing)
-                .Where(le => le.UserId == userId && le.LikeValue == likeValue)
-                .ToListAsync();
-        }
     }
 }

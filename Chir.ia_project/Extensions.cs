@@ -32,7 +32,8 @@ namespace Chir.ia_project
         {
             services.AddScoped<IMovieService, MovieService>()
                 .AddScoped<IListingService, ListingService>()
-                .AddScoped<IImageService, ImageService>();
+                .AddScoped<IImageService, ImageService>()
+                .AddScoped<IListingEngagementService, ListingEngagementService>();
 
             return services;
         }

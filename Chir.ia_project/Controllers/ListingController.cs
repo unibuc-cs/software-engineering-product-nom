@@ -14,12 +14,14 @@ namespace Chir.ia_project.Controllers
     public class ListingController : Controller
     {
         private readonly IListingService listingService;
+        private readonly IListingEngagementService listingEngagementService;
         protected readonly UserManager<User> userManager;
 
-        public ListingController(IListingService _listingsService, UserManager<User> _userManager)
+        public ListingController(IListingService _listingsService, UserManager<User> _userManager, IListingEngagementService _listingEngagementService)
         {
             listingService = _listingsService;
             userManager = _userManager;
+            listingEngagementService = _listingEngagementService;
         }
 
         [HttpGet]
@@ -69,8 +71,9 @@ namespace Chir.ia_project.Controllers
 
         [HttpGet]
         public async Task<IActionResult> IndexSwipe()
-        { 
-            var returnVal = await listingService.GetAllListingsAsync();
+        {
+            var userId = userManager.GetUserId(User);
+            var returnVal = await listingService.GetNotSwipedListingsAsync(Guid.Parse(userId));
             return View(returnVal);
         }
 
@@ -111,7 +114,7 @@ namespace Chir.ia_project.Controllers
         public async Task<IActionResult> LikedListings()
         {
             var userId = userManager.GetUserId(User);
-            var engagements = await listingService.GetUserEngagementsAsync(Guid.Parse(userId), LikeValue.Liked);
+            var engagements = await listingEngagementService.GetUserEngagementsAsync(Guid.Parse(userId), LikeValue.Liked);
             return View(engagements);
         }
 
@@ -120,14 +123,9 @@ namespace Chir.ia_project.Controllers
         public async Task<IActionResult> AddEngagement([FromBody] EngagementRequest request)
         {
             var userId = userManager.GetUserId(User);
-            await listingService.AddEngagementAsync(request.ListingId, Guid.Parse(userId), request.LikeValue);
+            await listingEngagementService.AddEngagementAsync(request.ListingId, Guid.Parse(userId), request.LikeValue);
             return Ok();
         }
 
-        public class EngagementRequest
-        {
-            public Guid ListingId { get; set; }
-            public LikeValue LikeValue { get; set; }
-        }
     }
 }

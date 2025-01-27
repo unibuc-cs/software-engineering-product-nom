@@ -1,4 +1,5 @@
 ﻿using Chir.ia_project.Models.Entities;
+using Chir.ia_project.Models.Enum;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -8,7 +9,7 @@ namespace Chir.ia_project.Models.Repository
     {
         Task<ListingEngagement> FirstOrDefaultAsync(Expression<Func<ListingEngagement, bool>> predicate);
         IQueryable<ListingEngagement> Query();
-
+        Task<List<Guid>> GetListingIdsFromListingsEngagementsByUserIdAsync(Guid userId);
     }
 
     public class ListingEngagementRepository : BaseRepository<ListingEngagement>, IListingEngagementRepository
@@ -29,5 +30,15 @@ namespace Chir.ia_project.Models.Repository
         {
             return await _context.ListingEngagements.FirstOrDefaultAsync(predicate);
         }
+
+        public async Task<List<Guid>> GetListingIdsFromListingsEngagementsByUserIdAsync(Guid userId)
+        {
+            return await _context.ListingEngagements
+            .Where(e => e.UserId == userId)
+            .Select(e => e.ListingId)
+            .ToListAsync();
+
+        }
+
     }
 }
