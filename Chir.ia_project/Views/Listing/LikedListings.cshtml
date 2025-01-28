@@ -17,6 +17,10 @@
                         <h5 class="card-title">@listing.Details</h5>
                         <p class="card-text">Area: @listing.TotalLivableArea</p>
                         <a href="@Url.Action("GetById", new { id = listing.Id })" class="btn btn-primary">View Details</a>
+                        
+                        <form method="get" action="/Message/Chat/@listing.UserId" style="margin: 0;">
+                            <button class="btn btn-danger" type="submit" style="width: 120px; height: 38px; font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">Delete listing</button>
+                        </form>
                     </div>
                 </div>
             </div>

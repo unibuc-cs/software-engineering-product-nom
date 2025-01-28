@@ -1,0 +1,100 @@
+﻿
+@*
+@model IEnumerable<Message>
+
+*@
+@using Microsoft.AspNetCore.Identity
+
+
+<style>
+    .chat-container {
+        max-width: 600px;
+        margin: 20px auto;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+    }
+
+    .message-history {
+        height: 400px;
+        overflow-y: auto;
+        border: 1px solid #eee;
+        margin-bottom: 15px;
+        padding: 10px;
+    }
+
+    .message {
+        margin: 10px 0;
+        padding: 8px;
+        border-radius: 12px;
+        max-width: 80%;
+    }
+
+    .sent {
+        background-color: #007bff;
+        color: white;
+        margin-left: auto;
+    }
+
+    .received {
+        background-color: #e9ecef;
+        margin-right: auto;
+    }
+
+    .message-form {
+        display: flex;
+        gap: 10px;
+    }
+
+    .message-input {
+        flex: 1;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+    }
+
+    .send-button {
+        padding: 8px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+</style>
+
+<div class="chat-container">
+    <div class="message-history">
+        @foreach (var message in Model.Messages)
+        {
+            <div class="message @(message.SenderId == Model.SenderId ? "sent" : "received")">
+                <div class="content">@message.Content</div>
+                <small class="timestamp">@message.Timestamp.ToString("HH:mm dd/MM")</small>
+            </div>
+        }
+    </div>
+
+    <!-- Formular pentru trimitere mesaje -->
+    <form asp-controller="Message" asp-action="SendMessage" method="post" class="message-form">
+        <input type="hidden" name="SenderId" value="@Model.SenderId" />
+        <input type="hidden" name="ReceiverId" value="@Model.ReceiverId" />
+
+        <input type="text"
+               name="Content"
+               class="message-input"
+               placeholder="Scrie un mesaj..."
+               required />
+
+        <button type="submit" class="send-button">Trimite</button>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        // Scroll automat la ultimul mesaj
+        window.onload = function() {
+            const history = document.querySelector('.message-history');
+            history.scrollTop = history.scrollHeight;
+        };
+    </script>
+}
