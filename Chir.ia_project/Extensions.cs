@@ -34,7 +34,9 @@ namespace Chir.ia_project
                 .AddScoped<IListingService, ListingService>()
                 .AddScoped<IImageService, ImageService>()
                 .AddScoped<IListingEngagementService, ListingEngagementService>()
-                .AddScoped<IMessageService, MessageService>();
+                .AddScoped<IMessageService, MessageService>()
+                .AddScoped<IUserService, UserService>();
+
 
 
             return services;

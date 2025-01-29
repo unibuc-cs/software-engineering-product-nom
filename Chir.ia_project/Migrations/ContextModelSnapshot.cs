@@ -202,6 +202,9 @@ namespace Chir.ia_project.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("ListingId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("ReceiverId")
                         .HasColumnType("uniqueidentifier");
 

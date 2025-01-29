@@ -19,6 +19,7 @@ namespace Chir.ia_project.Models.Entities
         //public int Id { get; set; }
         public Guid SenderId { get; set; } // ID-ul utilizatorului care trimite
         public Guid ReceiverId { get; set; } // ID-ul utilizatorului care primește
+        public Guid ListingId { get; set; }  // ID-ul listingului pentru care se incepe conversatia
 
         [Required]
         [MaxLength(2048)]

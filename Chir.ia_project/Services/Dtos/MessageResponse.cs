@@ -6,6 +6,7 @@ namespace Chir.ia_project.Services.Dtos
     {
         public Guid SenderId { get; set; } 
         public Guid ReceiverId { get; set; } 
+        public Guid ListingId { get; set; }
         public string Content { get; set; }
 
     }

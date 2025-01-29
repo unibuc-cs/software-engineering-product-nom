@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Chir.ia_project.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20250128192152_message3")]
-    partial class message3
+    [Migration("20250128210100_message4")]
+    partial class message4
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Chir.ia_project.Migrations
 {
     /// <inheritdoc />
-    public partial class message : Migration
+    public partial class message4 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,15 +26,6 @@ namespace Chir.ia_project.Migrations
                 nullable: true,
                 oldClrType: typeof(Guid),
                 oldType: "uniqueidentifier");
-
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "Messages",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier")
-                .Annotation("SqlServer:Identity", "1, 1");
 
             migrationBuilder.AddColumn<Guid>(
                 name: "ReceiverId",
@@ -92,15 +83,6 @@ namespace Chir.ia_project.Migrations
                 oldClrType: typeof(Guid),
                 oldType: "uniqueidentifier",
                 oldNullable: true);
-
-            migrationBuilder.AlterColumn<Guid>(
-                name: "Id",
-                table: "Messages",
-                type: "uniqueidentifier",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .OldAnnotation("SqlServer:Identity", "1, 1");
         }
     }
 }

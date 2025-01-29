@@ -1,9 +1,6 @@
 ﻿
-@*
-@model IEnumerable<Message>
-
-*@
 @using Microsoft.AspNetCore.Identity
+@model Chir.ia_project.Services.Dtos.MessageRequest
 
 
 <style>
@@ -78,6 +75,8 @@
     <form asp-controller="Message" asp-action="SendMessage" method="post" class="message-form">
         <input type="hidden" name="SenderId" value="@Model.SenderId" />
         <input type="hidden" name="ReceiverId" value="@Model.ReceiverId" />
+        <input type="hidden" name="ListingId" value="@Model.ListingId" />
+
 
         <input type="text"
                name="Content"

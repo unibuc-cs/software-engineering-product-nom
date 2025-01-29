@@ -150,6 +150,13 @@
                         <a href="/Listing/EditListing/@listing.Id" class="btn btn-primary" style="width: 120px; height: 38px; font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; display: flex; align-items: center; justify-content: center; text-decoration: none;">Edit listing</a>
                     </div>
                 </div>
+
+                <form asp-controller="Message" asp-action="Messages" method="get">
+                    <input type="hidden" name="ReceiverId" value="@listing.UserId" />
+                    <input type="hidden" name="ListingId" value="@listing.Id" />
+                    <button class="btn btn-primary" type="submit">Vezi mesaje</button>
+                </form>
+
             </div>
         </div>
     }

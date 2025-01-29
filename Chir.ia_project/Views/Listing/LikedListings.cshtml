@@ -18,9 +18,19 @@
                         <p class="card-text">Area: @listing.TotalLivableArea</p>
                         <a href="@Url.Action("GetById", new { id = listing.Id })" class="btn btn-primary">View Details</a>
                         
-                        <form method="get" action="/Message/Chat/@listing.UserId" style="margin: 0;">
-                            <button class="btn btn-danger" type="submit" style="width: 120px; height: 38px; font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">Delete listing</button>
+                        @*
+                        <form method="get" action="/Message/Index/@listing.UserId" style="margin: 0;">
+                            <button class="btn btn-success" type="submit" style="width: 120px; height: 38px; font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">Message</button>
                         </form>
+                        *@
+                        <form asp-controller="Message" asp-action="Index" method="get" class="message-form">
+                            <input type="hidden" name="ReceiverId" value="@listing.UserId" />
+                            <input type="hidden" name="ListingId" value="@listing.Id" />
+
+                            <button class="btn btn-success" type="submit" style="width: 120px; height: 38px; font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">Message</button>
+                        </form>
+
+
                     </div>
                 </div>
             </div>

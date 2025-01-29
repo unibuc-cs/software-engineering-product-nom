@@ -1,0 +1,43 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Mesaje primite:</h2>
+    <div class="row">
+        @foreach (var user in Model.Users)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">@user.Name</h5>
+
+                        <form asp-controller="Message" asp-action="Index" method="get" class="message-form">
+                            <input type="hidden" name="ReceiverId" value="@user.Id" />
+                            <input type="hidden" name="ListingId" value=@Model.ListingId />
+
+                            <button class="btn btn-success" type="submit" style="width: 120px; height: 38px; font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">Vezi mesaj</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 10px;
+        transition: transform 0.2s;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+</style>
