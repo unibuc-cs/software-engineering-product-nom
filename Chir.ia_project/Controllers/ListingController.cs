@@ -70,6 +70,7 @@ namespace Chir.ia_project.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> IndexSwipe()
         {
             var userId = userManager.GetUserId(User);

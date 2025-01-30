@@ -12,7 +12,15 @@ namespace Chir.ia_project
     {
         public static IServiceCollection AddDbContextAndIdentity(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
         {
-            services.AddDbContext<Context>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            if (environment.IsDevelopment())
+            {
+                services.AddDbContext<Context>(options => options.UseSqlServer(configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")));
+            }
+            else
+            {
+                services.AddDbContext<Context>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            }
+            
             services.AddRazorPages();
             services.AddDefaultIdentity<User>()
                 .AddEntityFrameworkStores<Context>();
